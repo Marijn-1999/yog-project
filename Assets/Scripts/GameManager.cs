@@ -11,17 +11,24 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        // Make this persist between scenes
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             lives = startingLives;
+
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Scene loaded: " + scene.name);
+        UpdateLivesUI();
     }
 
     public void PlayerDied()
@@ -31,14 +38,27 @@ public class GameManager : MonoBehaviour
 
         if (lives > 0)
         {
-            // Restart current level
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         else
         {
             Debug.Log("Game Over! Restarting game...");
             lives = startingLives;
-            SceneManager.LoadScene(0); // Load the first scene (index 0)
+            SceneManager.LoadScene(0);
+        }
+    }
+
+    private void UpdateLivesUI()
+    {
+        var livesUI = FindFirstObjectByType<LivesUI>();
+        if (livesUI != null)
+        {
+            Debug.Log("Found LivesUI — updating now");
+            livesUI.UpdateLives();
+        }
+        else
+        {
+            Debug.LogWarning("No LivesUI found in the scene!");
         }
     }
 }
