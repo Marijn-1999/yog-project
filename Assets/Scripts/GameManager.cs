@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public int startingLives = 3;
     public int lives;
 
+    [Header("Score Settings")]
+    public int score = 0;
+
     private void Awake()
     {
         if (Instance == null)
@@ -29,8 +32,10 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Scene loaded: " + scene.name);
         UpdateLivesUI();
+        UpdateScoreUI(); // Make sure score updates too
     }
 
+    // Called when the player dies
     public void PlayerDied()
     {
         lives--;
@@ -44,10 +49,20 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("Game Over! Restarting game...");
             lives = startingLives;
+            score = 0; // Reset score on full restart
             SceneManager.LoadScene(0);
         }
     }
 
+    // Called when a collectible (like a diamond) is picked up
+    public void AddScore(int amount)
+    {
+        score += amount;
+        Debug.Log("Score: " + score);
+        UpdateScoreUI();
+    }
+
+    // Updates the Lives UI in the scene
     private void UpdateLivesUI()
     {
         var livesUI = FindFirstObjectByType<LivesUI>();
@@ -59,6 +74,21 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("No LivesUI found in the scene!");
+        }
+    }
+
+    // Updates the Score UI in the scene
+    private void UpdateScoreUI()
+    {
+        var scoreUI = FindFirstObjectByType<ScoreUI>();
+        if (scoreUI != null)
+        {
+            Debug.Log("Found ScoreUI — updating now");
+            scoreUI.UpdateScore();
+        }
+        else
+        {
+            Debug.LogWarning("No ScoreUI found in the scene!");
         }
     }
 }
