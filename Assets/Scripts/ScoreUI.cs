@@ -14,7 +14,7 @@ public class ScoreUI : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = $"Score: {GameManager.Instance.score:000000}";
+            scoreText.text = $"Score: {GameManager.Instance.score:00000}";
         }
         else
         {
