@@ -37,22 +37,28 @@ public class GameManager : MonoBehaviour
         UpdateScoreUI();
     }
 
-    public void PlayerDied()
-    {
-        lives--;
+  public void PlayerDied()
+{
+    lives--;
 
-        if (lives > 0)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
-        else
-        {
-            lives = startingLives;
-            score = 0;
-            collectedItems.Clear(); // reset collected diamonds on full restart
-            SceneManager.LoadScene(0);
-        }
+    if (lives > 0)
+    {
+        // Restart current level
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
+    else
+    {
+        // Out of lives → go to Game Over screen
+        score = 0;
+        collectedItems.Clear(); // reset collected diamonds if you track them
+
+        Debug.Log("Game Over! Loading Game Over screen...");
+
+        SceneManager.LoadScene("GameOver"); 
+
+    }
+}
+
 
     public void AddScore(int amount)
     {
